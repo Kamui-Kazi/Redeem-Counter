@@ -26,14 +26,14 @@ class Counter():
 class Bot(commands.Bot):
     def __init__(self, *, token_database: asqlite.Pool) -> None:
         self.token_database = token_database
-        self.target_id=os.environ['TARGET_ID_2']
+        self.target_id=os.environ['TARGET']
         self.counter = Counter()
         super().__init__(
-            client_id=os.environ['TWITCH_CLIENT_ID'],
-            client_secret=os.environ['TWITCH_CLIENT_SECRET'],
-            bot_id=os.environ['OWNER_ID'],
-            owner_id=os.environ['BOT_ID'],
-            prefix="!",
+            client_id=os.environ['CLIENT_ID'],
+            client_secret=os.environ['CLIENT_SECRET'],
+            bot_id=os.environ['OWNER'],
+            owner_id=os.environ['BOT'],
+            prefix=os.environ['PREFIX'],
         )
     
     async def event_ready(self):
