@@ -23,36 +23,45 @@ class Counter():
     def pp(self) -> str:
         return f"Meow has been redeemed {self.count} times"
 
+
+
+# This is where the Bot, its connections, and oauth are set up
 class Bot(commands.Bot):
     def __init__(self, *, token_database: asqlite.Pool) -> None:
         self.token_database = token_database
-        self.target_id=os.environ['TARGET']
         self.counter = Counter()
+        
+        self.owner_name=os.environ['OWNER_NAME']
+        self.bot_name=os.environ['BOT_NAME']
+        self.target_id=os.environ['TARGET_ID']
+        self.target_name=os.environ['TARGET_NAME']
+        
         super().__init__(
             client_id=os.environ['CLIENT_ID'],
             client_secret=os.environ['CLIENT_SECRET'],
-            bot_id=os.environ['OWNER'],
-            owner_id=os.environ['BOT'],
-            prefix=os.environ['PREFIX'],
+            bot_id=os.environ['BOT_ID'],
+            owner_id=os.environ['OWNER_ID'],
+            prefix=os.environ['BOT_PREFIX'],
         )
     
     async def event_ready(self):
         # When the bot is ready
         LOGGER.info("Successfully logged in as: %s", self.bot_id)
-        ws = self.create_partialuser(user_id=os.environ['OWNER_ID'], user_login=os.environ['CHANNEL'])
-        await ws.send_message(sender=self.bot_id, message='Bot has landed')
+        target = self.create_partialuser(user_id=self.target_id, user_login=self.target_name)
+        await target.send_message(sender=self.bot_id, message='Bot has landed')
 
     #oauth token portion
     async def setup_hook(self) -> None:
         # Add our component which contains our commands...
         await self.add_component(MyComponent(self))
     
-        # Subscribe to read chat (event_message) from our channel as the bot...
-        # This creates and opens a websocket to Twitch EventSub...
-        subscription = eventsub.ChatMessageSubscription(broadcaster_user_id=self.owner_id, user_id=self.bot_id)
+        # Subscribe to chat (event_message)
+        subscription = eventsub.ChatMessageSubscription(broadcaster_user_id=self.target_id, user_id=self.bot_id)
         await self.subscribe_websocket(payload=subscription)
 
-        subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.owner_id)
+        # # Subscribe to reward redeems (event_custom_redemption_add)
+        # subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id)
+        # await self.subscribe_websocket(payload=subscription)
 
     async def add_token(self, token: str, refresh: str) -> twitchio.authentication.ValidateTokenPayload:
         # Make sure to call super() as it will add the tokens interally and return us some data...
@@ -88,8 +97,10 @@ class Bot(commands.Bot):
         query = """CREATE TABLE IF NOT EXISTS tokens(user_id TEXT PRIMARY KEY, token TEXT NOT NULL, refresh TEXT NOT NULL)"""
         async with self.token_database.acquire() as connection:
             await connection.execute(query)
-    
 
+
+
+#This is where all the commands and "reactions" for the bot are setup
 class MyComponent(commands.Component):
     def __init__(self, bot: Bot):
         self.bot = bot
@@ -125,7 +136,7 @@ class MyComponent(commands.Component):
         #mod only command that sets the number of meows
         count = 0
         for i in range(11, ctx.content.__len__()):
-            count += 10^(i-11) * int(ctx.content[i])
+            count += 10**(i-11) * int(ctx.content[i])
         self.bot.counter.set(count)
         await ctx.reply(content=f"Meows set to {count}")
 
