@@ -60,8 +60,8 @@ class Bot(commands.Bot):
         await self.subscribe_websocket(payload=subscription)
 
         # Subscribe to reward redeems (event_custom_redemption_add)
-        subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id)
-        await self.subscribe_websocket(payload=subscription)
+        # subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id)
+        # await self.subscribe_websocket(payload=subscription)
 
     async def add_token(self, token: str, refresh: str) -> twitchio.authentication.ValidateTokenPayload:
         # Make sure to call super() as it will add the tokens interally and return us some data...
@@ -104,6 +104,14 @@ class Bot(commands.Bot):
 class MyComponent(commands.Component):
     def __init__(self, bot: Bot):
         self.bot = bot
+    
+    async def event_command_error(self, ctx: commands.Context, error: Exception):
+        if isinstance(error, commands.CheckFailure):
+            # Prevent traceback, optionally send a message
+            await ctx.send("You don't have permission to use this command.")
+        else:
+            # Print unexpected errors
+            print(f"Unexpected error: {error}")
 
     # We use this listener to increment the count every time a Meow is redeemed
     @commands.Component.listener()
@@ -119,28 +127,23 @@ class MyComponent(commands.Component):
 
     # we use @commands.command() to initiate the setup of a command
     @commands.command()
-    @commands.is_moderator()
     async def meows(self, ctx: commands.Context) -> None:
         #mod only command that displays the number of meows 
         await ctx.reply(content=self.bot.counter.pp())
 
     @commands.command()
     @commands.is_moderator()
-    async def add_meows(self, ctx: commands.Context, *, content: str) -> None:
+    async def add_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         #mod only command that adds to the number of meows
-        count = int(ctx.content)
-        self.bot.counter.set(count)
-        await ctx.reply(content=f"{count} Meows added, current count is {self.bot.counter.count}")
+        self.bot.counter.add(value)
+        await ctx.reply(content=f"{value} Meows added, current count is {self.bot.counter.count}")
 
     @commands.command()
     @commands.is_moderator()
-    async def set_meows(self, ctx: commands.Context, *, content: str) -> None:
+    async def set_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         #mod only command that sets the number of meows
-        count = 0
-        for i in range(11, ctx.content.__len__()):
-            count += 10**(i-11) * int(ctx.content[i])
-        self.bot.counter.set(count)
-        await ctx.reply(content=f"Meows set to {count}")
+        self.bot.counter.set(value)
+        await ctx.reply(content=f"Meows set to {value}")
 
     @commands.command()
     @commands.is_moderator()
@@ -156,6 +159,15 @@ class MyComponent(commands.Component):
         #await ctx.send(content=reward_costs_1)
         reward_costs_2 = "Meow: 1 | Ara Ara: 10 | Senpai daisuki: 50 | Nya for 10 minutes: 100 | X3 nuzzles song: 500"
         await ctx.send(content=reward_costs_2)
+    
+    @commands.command()
+    async def meow_commands(self, ctx: commands.Context) -> None:
+        reply = "PUBLIC: !meows, !meow_rewards"
+        if ctx.chatter.moderator or ctx.chatter.broadcaster:
+            reply +=" | MOD ONLY: !add_meows, !set_meows, !reset_meows"
+        await ctx.reply(content=reply)
+        
+    
     
 def main() -> None:
     load_dotenv()
