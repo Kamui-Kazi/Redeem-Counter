@@ -2,7 +2,7 @@
 
 ## Bot commands
 !meows
->limited to mods
+>public
 >
 > replies with the amount of meows
 
