@@ -4,7 +4,6 @@ import logging
 import asyncio
 import asqlite
 
-
 import twitchio
 from twitchio import eventsub
 from twitchio.ext import commands
@@ -95,15 +94,17 @@ class MyComponent(commands.Component):
     def __init__(self, bot: Bot):
         self.bot = bot
 
+    # We use this listener to increment the count every time a Meow is redeemed
     @commands.Component.listener()
     async def event_custom_redemption_add(self, payload: twitchio.ChannelPointsRedemptionAdd):
         self.bot.counter.add(1)
 
-    # We use a listener in our Component to display the messages received.
-    @commands.Component.listener()
-    async def event_message(self, payload: twitchio.ChatMessage) -> None:
-        pass
+    # # We use a listener in our Component to display the messages received.
+    # @commands.Component.listener()
+    # async def event_message(self, payload: twitchio.ChatMessage) -> None:
+    #     pass
 
+    # we use @commands.command() to initiate the setup of a command
     @commands.command()
     @commands.is_moderator()
     async def meows(self, ctx: commands.Context) -> None:
@@ -134,6 +135,14 @@ class MyComponent(commands.Component):
         #mod only command that resets the number of meows
         self.bot.counter.reset() 
         await ctx.reply(content="Meows Reset")
+    
+    @commands.command()
+    async def meow_rewards(self, ctx: commands.Context) -> None:
+        #public command that explains the meow cost of diffrent rewards
+        #reward_costs_1 = "Key| Aries says: cost in Meows "
+        #await ctx.send(content=reward_costs_1)
+        reward_costs_2 = "Meow: 1 | Ara Ara: 10 | Senpai daisuki: 50 | Nya for 10 minutes: 100 | X3 nuzzles song: 500"
+        await ctx.send(content=reward_costs_2)
     
 def main() -> None:
     load_dotenv()
