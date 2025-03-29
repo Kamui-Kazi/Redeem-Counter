@@ -6,6 +6,16 @@
 >
 > replies with the amount of meows
 
+!meow_rewards
+>public
+>
+>sends a message that explaines the cost of the diffrent rewards for the ammount of meows redeemed
+
+!meow_commands
+>public
+>
+>replies with a list of the commands avalible to the caller
+
 !add_meows *amount to add*
 >limited to mods
 >
@@ -24,11 +34,6 @@
 >limited to mods
 >
 >resets the count of meows
-
-!meow_rewards
->public
->
->sends a message that explaines the cost of the diffrent rewards for the ammount of meows redeemed
 
 ## setup the bot
 1. Create a new Twitch account. This will be the dedicated bot account.
