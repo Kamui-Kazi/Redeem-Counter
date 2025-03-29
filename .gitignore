@@ -179,3 +179,4 @@ tokens.db-wal
 .tio.tokens.json
 queue testing.py
 test.py
+/.vscode
