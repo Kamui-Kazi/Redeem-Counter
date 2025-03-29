@@ -87,7 +87,7 @@ class Bot(commands.Bot):
         # We don't need to call this manually, it is called in .login() from .start() internally...
 
         async with self.token_database.acquire() as connection:
-            rows: list[sqlite3.Row] = await connection.fetchall("""SELECT * from tokens""")
+            rows: list[sqlite3.Row] = await connection.fetchall("""SELECT * from tokens""") # type: ignore
 
         for row in rows:
             await self.add_token(row["token"], row["refresh"])
@@ -132,6 +132,21 @@ class MyComponent(commands.Component):
         await ctx.reply(content=self.bot.counter.pp())
 
     @commands.command()
+    async def meow_rewards(self, ctx: commands.Context) -> None:
+        #public command that explains the meow cost of diffrent rewards
+        #reward_costs_1 = "Key| Aries says: cost in Meows "
+        #await ctx.send(content=reward_costs_1)
+        reward_costs_2 = "Meow: 1 | Ara Ara: 10 | Senpai daisuki: 50 | Nya for 10 minutes: 100 | X3 nuzzles song: 500"
+        await ctx.send(content=reward_costs_2)
+    
+    @commands.command()
+    async def meow_commands(self, ctx: commands.Context) -> None:
+        reply = "PUBLIC: !meows, !meow_rewards"
+        if ctx.chatter.moderator or ctx.chatter.broadcaster:
+            reply +=" | MOD ONLY: !add_meows, !set_meows, !reset_meows"
+        await ctx.reply(content=reply)
+    
+    @commands.command()
     @commands.is_moderator()
     async def add_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         #mod only command that adds to the number of meows
@@ -151,21 +166,6 @@ class MyComponent(commands.Component):
         #mod only command that resets the number of meows
         self.bot.counter.reset() 
         await ctx.reply(content="Meows Reset")
-    
-    @commands.command()
-    async def meow_rewards(self, ctx: commands.Context) -> None:
-        #public command that explains the meow cost of diffrent rewards
-        #reward_costs_1 = "Key| Aries says: cost in Meows "
-        #await ctx.send(content=reward_costs_1)
-        reward_costs_2 = "Meow: 1 | Ara Ara: 10 | Senpai daisuki: 50 | Nya for 10 minutes: 100 | X3 nuzzles song: 500"
-        await ctx.send(content=reward_costs_2)
-    
-    @commands.command()
-    async def meow_commands(self, ctx: commands.Context) -> None:
-        reply = "PUBLIC: !meows, !meow_rewards"
-        if ctx.chatter.moderator or ctx.chatter.broadcaster:
-            reply +=" | MOD ONLY: !add_meows, !set_meows, !reset_meows"
-        await ctx.reply(content=reply)
         
     
     
