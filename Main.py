@@ -59,9 +59,9 @@ class Bot(commands.Bot):
         subscription = eventsub.ChatMessageSubscription(broadcaster_user_id=self.target_id, user_id=self.bot_id)
         await self.subscribe_websocket(payload=subscription)
 
-        # # Subscribe to reward redeems (event_custom_redemption_add)
-        # subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id)
-        # await self.subscribe_websocket(payload=subscription)
+        # Subscribe to reward redeems (event_custom_redemption_add)
+        subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id)
+        await self.subscribe_websocket(payload=subscription)
 
     async def add_token(self, token: str, refresh: str) -> twitchio.authentication.ValidateTokenPayload:
         # Make sure to call super() as it will add the tokens interally and return us some data...
@@ -109,6 +109,8 @@ class MyComponent(commands.Component):
     @commands.Component.listener()
     async def event_custom_redemption_add(self, payload: twitchio.ChannelPointsRedemptionAdd):
         self.bot.counter.add(1)
+        #prints out the info assosiated with the redeem
+        #print(f"[{payload.broadcaster.display_name}] - user:{payload.user.display_name}: redeemed - {payload.reward.title}, {payload.reward.id} | id: {payload.id}")
 
     # # We use a listener in our Component to display the messages received.
     # @commands.Component.listener()
