@@ -1,4 +1,4 @@
-# Twitch-notif (Redeem counter)
+# Redeem counter (Twitch bot)
 
 ## Bot commands
 !meows
