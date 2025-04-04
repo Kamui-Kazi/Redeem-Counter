@@ -44,3 +44,6 @@
 6. In your main browser whilst logged in as your account, visit http://localhost:4343/oauth?scopes=channel:bot
 7. Stop the bot and uncomment everything in setup_hook.
 8. Start the bot.
+
+## to get the twitch ids I used this site
+https://www.streamweasels.com/tools/convert-twitch-username-%20to-user-id/
