@@ -2,6 +2,8 @@
 
 This is a bot for a streamer who has a channel point redeem called 'meow for chat' that is rapidly redeemed at points during stream. They refund the redeems as they come in and as such they need to keep track of the count, so far they have been having their mods count the redeems but as there can be hundreds of redeems, this is a difficult position, they already tried to use Stream Elements to count the redeems but Stream Elements was unable to keep up with the several redeems per second.
 
+required python version >= 3.11
+
 ## Bot commands
 !meows
 >public
