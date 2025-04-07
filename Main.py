@@ -126,7 +126,7 @@ class MyComponent(commands.Component):
     async def event_custom_redemption_add(self, payload: twitchio.ChannelPointsRedemptionAdd):
         self.bot.counter.add(1)
         #prints out the info assosiated with the redeem
-        #print(f"[{payload.broadcaster.display_name}] - user:{payload.user.display_name}: redeemed - {payload.reward.title}, {payload.reward.id} | id: {payload.id}")
+        LOGGER.info(f"[{payload.broadcaster.display_name}] - user:{payload.user.display_name}: redeemed - {payload.reward.title}, {payload.reward.id} | id: {payload.id}")
 
     # we use @commands.command() to initiate the setup of a command
     @commands.command()
