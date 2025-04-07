@@ -1,29 +1,20 @@
+import sys
+if (sys.version_info[0] < 3) and (sys.version_info[1] < 11):
+    raise Exception("Python 3.11 or a more recent version is required.")
+
 import os
 from dotenv import load_dotenv
 import logging
 import asyncio
 import asqlite
 
+from counter import Counter
+
 import twitchio
 from twitchio import eventsub
 from twitchio.ext import commands
 
 LOGGER: logging.Logger = logging.getLogger("Bot")
-
-# creating the class that is used to keep track of the number of meows
-class Counter():
-    def __init__(self):
-        self.count = 0
-    def add(self, count: int):
-        self.count += count
-    def set(self, count: int):
-        self.count = count
-    def reset(self):
-        self.count = 0
-    def pp(self) -> str:
-        return f"Meow has been redeemed {self.count} times"
-
-
 
 # This is where the Bot, its connections, and oauth are set up
 class Bot(commands.Bot):
@@ -54,14 +45,28 @@ class Bot(commands.Bot):
     async def setup_hook(self) -> None:
         # Add our component which contains our commands...
         await self.add_component(MyComponent(self))
-    
-        # Subscribe to chat (event_message)
-        subscription = eventsub.ChatMessageSubscription(broadcaster_user_id=self.target_id, user_id=self.bot_id)
-        await self.subscribe_websocket(payload=subscription)
 
-        # Subscribe to reward redeems (event_custom_redemption_add)
-        # subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id)
-        # await self.subscribe_websocket(payload=subscription)
+        # Check if the EventSub setup has been completed before
+        async with self.token_database.acquire() as connection:
+            row = await connection.fetchone("SELECT value FROM flags WHERE key = 'eventsub_initialized'")  # type: ignore
+
+        # If this is the second run (EventSub setup has been done before)
+        if row and row["value"] == "true":
+            # Subscribe to chat messages (EventSub)
+            subscription = eventsub.ChatMessageSubscription(broadcaster_user_id=self.target_id, user_id=self.bot_id)
+            await self.subscribe_websocket(payload=subscription)
+            
+            # Subscribe to reward redeems (event_custom_redemption_add)
+            # subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id)
+            # await self.subscribe_websocket(payload=subscription)
+            
+        else:
+            # This is the first run, so skip EventSub subscription and mark it as completed
+            print("First run — skipping EventSub subscription")
+            async with self.token_database.acquire() as connection:
+                await connection.execute(
+                    "INSERT OR REPLACE INTO flags (key, value) VALUES ('eventsub_initialized', 'true')"
+                )
 
     async def add_token(self, token: str, refresh: str) -> twitchio.authentication.ValidateTokenPayload:
         # Make sure to call super() as it will add the tokens interally and return us some data...
@@ -95,8 +100,11 @@ class Bot(commands.Bot):
     async def setup_database(self) -> None:
         # Create our token table, if it doesn't exist..
         query = """CREATE TABLE IF NOT EXISTS tokens(user_id TEXT PRIMARY KEY, token TEXT NOT NULL, refresh TEXT NOT NULL)"""
+        query_flags = """CREATE TABLE IF NOT EXISTS flags(key TEXT PRIMARY KEY, value TEXT NOT NULL)"""
+        
         async with self.token_database.acquire() as connection:
-            await connection.execute(query)
+            await connection.execute(query)         # tokens table
+            await connection.execute(query_flags)   # flags table
 
 
 
@@ -120,11 +128,6 @@ class MyComponent(commands.Component):
         #prints out the info assosiated with the redeem
         #print(f"[{payload.broadcaster.display_name}] - user:{payload.user.display_name}: redeemed - {payload.reward.title}, {payload.reward.id} | id: {payload.id}")
 
-    # # We use a listener in our Component to display the messages received.
-    # @commands.Component.listener()
-    # async def event_message(self, payload: twitchio.ChatMessage) -> None:
-    #     pass
-
     # we use @commands.command() to initiate the setup of a command
     @commands.command()
     async def meows(self, ctx: commands.Context) -> None:
@@ -147,21 +150,45 @@ class MyComponent(commands.Component):
         await ctx.reply(content=reply)
     
     @commands.command()
+    #To set the minimum permission/badge level to use this command remove the '#' at the begining of the line immediately following the user level desired
+    #ensure there is a '#' at the beginning of the lines immediately following the remaining levels
+    #to allow anyone to use the command place a '#' before all of the lines immediately following every level
+    #Broadcaster
+    #@commands.is_broadcaster()
+    #Moderator
     @commands.is_moderator()
+    #VIP
+    #@commands.is_elevated()
     async def add_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         #mod only command that adds to the number of meows
         self.bot.counter.add(value)
         await ctx.reply(content=f"{value} Meows added, current count is {self.bot.counter.count}")
 
     @commands.command()
+    #To set the minimum permission/badge level to use this command remove the '#' at the begining of the line immediately following the user level desired
+    #ensure there is a '#' at the beginning of the lines immediately following the remaining levels
+    #to allow anyone to use the command place a '#' before all of the lines immediately following every level
+    #Broadcaster
+    #@commands.is_broadcaster()
+    #Moderator
     @commands.is_moderator()
+    #VIP
+    #@commands.is_elevated()
     async def set_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         #mod only command that sets the number of meows
         self.bot.counter.set(value)
         await ctx.reply(content=f"Meows set to {value}")
 
     @commands.command()
+    #To set the minimum permission/badge level to use this command remove the '#' at the begining of the line immediately following the user level desired
+    #ensure there is a '#' at the beginning of the lines immediately following the remaining levels
+    #to allow anyone to use the command place a '#' before all of the lines immediately following every level
+    #Broadcaster
+    #@commands.is_broadcaster()
+    #Moderator
     @commands.is_moderator()
+    #VIP
+    #@commands.is_elevated()
     async def reset_meows(self, ctx: commands.Context) -> None:
         #mod only command that resets the number of meows
         self.bot.counter.reset() 
