@@ -72,11 +72,10 @@ if you didn't before this will fix that, also if pip isn't working this might fi
 1. Create a new Twitch account. This will be the dedicated bot account.
 2. Enter your CLIENT_ID and CLIENT_SECRET from the twitch application you made above into the provided .env file
 3. do the same with the BOT_ID and OWNER_ID, these are not your usernames, these are numerical IDs that you can get from https://www.streamweasels.com/tools/convert-twitch-username-%20to-user-id/
-4. Comment out everything in setup_hook.
 5. Run the bot.
 6. Open a new browser / incognito mode, log in as the bot account and visit http://localhost:4343/oauth?scopes=user:read:chat%20user:write:chat%20user:bot%20channel:read:redemptions
 7. Whilst logged in as the stream channel account, visit http://localhost:4343/oauth?scopes=channel:bot
-8. Stop the bot and uncomment everything in setup_hook.
+8. Stop the bot.
 9. Start the bot.
 
 ## to get the twitch ids I used this site
