@@ -38,8 +38,8 @@ class Bot(commands.Bot):
     async def event_ready(self):
         # When the bot is ready
         LOGGER.info("Successfully logged in as: %s", self.bot_id)
-        target = self.create_partialuser(user_id=self.target_id, user_login=self.target_name)
-        await target.send_message(sender=self.bot_id, message='Bot has landed')
+    #    target = self.create_partialuser(user_id=self.target_id, user_login=self.target_name)
+    #    await target.send_message(sender=self.bot_id, message='Bot has landed')
 
     #oauth token portion
     async def setup_hook(self) -> None:
@@ -57,8 +57,8 @@ class Bot(commands.Bot):
             await self.subscribe_websocket(payload=subscription)
             
             # Subscribe to reward redeems (event_custom_redemption_add)
-            # subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id)
-            # await self.subscribe_websocket(payload=subscription)
+            subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id, reward_id='ea01c05c-73bc-414f-bfb9-4e49ab069341')
+            await self.subscribe_websocket(payload=subscription, token_for=self.target_id)
             
         else:
             # This is the first run, so skip EventSub subscription and mark it as completed
@@ -113,10 +113,14 @@ class MyComponent(commands.Component):
     def __init__(self, bot: Bot):
         self.bot = bot
     
-    async def event_command_error(self, ctx: commands.Context, error: Exception):
-        if isinstance(error, commands.CheckFailure):
+    async def event_command_error(self, ctx: commands.Context, error: Exception) -> None:
+        if isinstance(error, commands.exceptions.GuardFailure):
             # Prevent traceback, optionally send a message
             await ctx.send("You don't have permission to use this command.")
+            return
+        if isinstance(error, commands.exceptions.CommandNotFound):
+            await ctx.send(f"Unknown command: {ctx.message.text}")
+            return
         else:
             # Print unexpected errors
             print(f"Unexpected error: {error}")
@@ -139,7 +143,7 @@ class MyComponent(commands.Component):
         #public command that explains the meow cost of diffrent rewards
         #reward_costs_1 = "Key| Aries says: cost in Meows "
         #await ctx.send(content=reward_costs_1)
-        reward_costs_2 = "Meow: 1 | Ara Ara: 10 | Senpai daisuki: 50 | Nya for 10 minutes: 100 | X3 nuzzles song: 500"
+        reward_costs_2 = "Meow: 1 | Ara Ara: 10 | Senpai daisuki: 50 | Nya for 10 minutes: 300 | X3 nuzzles song: 500"
         await ctx.send(content=reward_costs_2)
     
     @commands.command()
