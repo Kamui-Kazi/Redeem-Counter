@@ -57,8 +57,8 @@ class Bot(commands.Bot):
             await self.subscribe_websocket(payload=subscription)
             
             # Subscribe to reward redeems (event_custom_redemption_add)
-            # subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id)
-            # await self.subscribe_websocket(payload=subscription)
+            subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id)
+            await self.subscribe_websocket(payload=subscription)
             
         else:
             # This is the first run, so skip EventSub subscription and mark it as completed
@@ -105,21 +105,21 @@ class Bot(commands.Bot):
         async with self.token_database.acquire() as connection:
             await connection.execute(query)         # tokens table
             await connection.execute(query_flags)   # flags table
-
-
+            
+    async def invoke(self, ctx: commands.Context):
+        try:
+            await ctx.invoke()
+        except commands.CommandNotFound:
+            LOGGER.warning("Unknown command: %s", ctx.message.text)
+        except commands.GuardFailure:
+            await ctx.reply("You don't have permission to use this command.")
+            LOGGER.warning("Command called without perms: %s", ctx.message.text)
+            
 
 #This is where all the commands and "reactions" for the bot are setup
 class MyComponent(commands.Component):
     def __init__(self, bot: Bot):
         self.bot = bot
-    
-    async def event_command_error(self, ctx: commands.Context, error: Exception):
-        if isinstance(error, commands.CheckFailure):
-            # Prevent traceback, optionally send a message
-            await ctx.send("You don't have permission to use this command.")
-        else:
-            # Print unexpected errors
-            print(f"Unexpected error: {error}")
 
     # We use this listener to increment the count every time a Meow is redeemed
     @commands.Component.listener()
