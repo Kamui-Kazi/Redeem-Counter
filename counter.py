@@ -1,14 +1,18 @@
-class Counter():
-    def __init__(self):
-        self.count = 0
-    def add(self, count: int):
-        self.count += count
-    def set(self, count: int):
-        self.count = count
-    def reset(self):
-        self.count = 0
-    def pp(self) -> str:
-        return f"Meow has been redeemed {self.count} times"
+class Counter:
+    count = 0
     
-import sys
-print(sys.version_info)
+    @classmethod
+    def add(cls, count: int):
+        cls.count += count
+
+    @classmethod
+    def set(cls, count: int):
+        cls.count = count
+
+    @classmethod
+    def reset(cls):
+        cls.count = 0
+
+    @classmethod
+    def pp(cls) -> str:
+        return f"Meow has been redeemed {cls.count} times"
