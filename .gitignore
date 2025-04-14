@@ -180,4 +180,6 @@ tokens.db-wal
 queue testing.py
 test.py
 /.vscode
+
+*.local
 .env
