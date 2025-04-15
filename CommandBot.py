@@ -237,9 +237,17 @@ class CommandComponent(commands.Component):
 
         func = command_dict.get(command_type)
 
+        
+
         if func:
-            if command_type in ['add', 'sub', 'set']:
-                await func(ctx, value)
+            if command_type in ['add', 'sub', 'set', 'reset']:
+                if (ctx.chatter._is_moderator or ctx.chatter._is_broadcaster):
+                    if command_type in ['add', 'sub', 'set']:
+                        await func(ctx, value)
+                    else:
+                        await func(ctx)
+                else:
+                    await ctx.reply("You don't have the perms for this silly.")
             else:
                 await func(ctx)
         else:
