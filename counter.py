@@ -7,7 +7,10 @@ class Counter:
 
     @classmethod
     def subtract(cls, count: int):
-        cls.count -= count
+        if cls.count - count <0:
+            cls.count = 0
+        else:
+            cls.count -= count
 
     @classmethod
     def set(cls, count: int):
