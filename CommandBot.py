@@ -161,6 +161,24 @@ class CommandComponent(commands.Component):
     #@commands.is_broadcaster() # set's command to streamer only
     @commands.is_moderator() # set's command to moderators and streamer only
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
+    async def sub_meows(self, ctx: commands.Context, *, value:str = '1') -> None:
+        command_dict = {'meow':1,'ara':10,'senpai':50,'onii':100,'nya':300, 'X3': 500}
+        for key in command_dict:
+            if key == value:
+                pair = command_dict[key]
+                self.bot.counter.subtract(pair)
+                await ctx.reply(content=f"Removed {pair} meows. Current count is {self.bot.counter.count} meows")
+                return
+        
+        self.bot.counter.subtract(int(value))
+        await ctx.reply(content=f"Removed {value} meows. Current count is {self.bot.counter.count} meows")
+
+    @commands.command()
+    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
+    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
+    #@commands.is_broadcaster() # set's command to streamer only
+    @commands.is_moderator() # set's command to moderators and streamer only
+    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def set_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         #mod only command that sets the number of meows
         self.bot.counter.set(value)
@@ -176,3 +194,5 @@ class CommandComponent(commands.Component):
         #mod only command that resets the number of meows
         self.bot.counter.reset() 
         await ctx.reply(content="Meows Reset")
+
+    
