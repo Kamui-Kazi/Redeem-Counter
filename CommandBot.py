@@ -162,7 +162,7 @@ class CommandComponent(commands.Component):
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def add_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         await self._add_meows(ctx, value)
-    async def _add_meows(self, ctx: commands.Context, *, value: int=0) -> None:
+    async def _add_meows(self, ctx: commands.Context, value: int=0) -> None:
         #mod only command that adds to the number of meows
         self.bot.counter.add(value)
         await ctx.reply(content=f"{value} Meows added, current count is {self.counter.count}")
@@ -176,7 +176,7 @@ class CommandComponent(commands.Component):
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def sub_meows(self, ctx: commands.Context, *, value:str = '1') -> None:
         await self._sub_meows(ctx, value)
-    async def _sub_meows(self, ctx: commands.Context, *, value:str = '1') -> None:
+    async def _sub_meows(self, ctx: commands.Context, value:str = '1') -> None:
         command_dict = {'meow':1,'ara':10,'senpai':50,'onii':100,'nya':300, 'X3': 500}
         for key in command_dict:
             if key == value:
@@ -198,7 +198,7 @@ class CommandComponent(commands.Component):
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def set_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         await self._set_meows(ctx, value)
-    async def _set_meows(self, ctx: commands.Context, *, value: int=0) -> None:
+    async def _set_meows(self, ctx: commands.Context, value: int=0) -> None:
         #mod only command that sets the number of meows
         self.counter.set(value)
         await ctx.reply(content=f"Meows set to {value}")
@@ -226,13 +226,13 @@ class CommandComponent(commands.Component):
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def meow(self, ctx: commands.Context, command_type: str = 'count', value: int = 0) -> None:
         command_dict = {
-            'count': self.meows,
-            'rewards': self.meow_rewards,
-            'commands': self.meow_commands,
-            'add': self.add_meows,
-            'sub': self.sub_meows,
-            'set': self.set_meows,
-            'reset': self.reset_meows
+            'count': self._meows,
+            'rewards': self._meow_rewards,
+            'commands': self._meow_commands,
+            'add': self._add_meows,
+            'sub': self._sub_meows,
+            'set': self._set_meows,
+            'reset': self._reset_meows
         }
 
         func = command_dict.get(command_type)
@@ -241,7 +241,7 @@ class CommandComponent(commands.Component):
 
         if func:
             if command_type in ['add', 'sub', 'set', 'reset']:
-                if (ctx.chatter._is_moderator or ctx.chatter._is_broadcaster):
+                if (ctx.chatter.moderator or ctx.chatter.broadcaster):
                     if command_type in ['add', 'sub', 'set']:
                         await func(ctx, value)
                     else:
