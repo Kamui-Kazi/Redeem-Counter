@@ -119,6 +119,8 @@ class CommandComponent(commands.Component):
     #@commands.is_moderator() # set's command to moderators and streamer only
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def meows(self, ctx: commands.Context) -> None:
+        await self._meows(ctx)
+    async def _meows(self, ctx: commands.Context) -> None:
         #mod only command that displays the number of meows 
         await ctx.reply(content=self.counter.pp())
         LOGGER.info("user: %s - used \"!meows\"", ctx.chatter.display_name)
@@ -130,6 +132,8 @@ class CommandComponent(commands.Component):
     #@commands.is_moderator() # set's command to moderators and streamer only
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def meow_rewards(self, ctx: commands.Context) -> None:
+        await self._meow_rewards(ctx)
+    async def _meow_rewards(self, ctx: commands.Context) -> None:
         #public command that explains the meow cost of diffrent rewards
         reward_costs_1 = "Meow: 1 | Ara Ara: 10 | Senpai daisuki: 50 | Onii-chan: 100 | Nya for 10 minutes: 300 | X3 nuzzles song: 500"
         await ctx.send(content=reward_costs_1)
@@ -142,6 +146,8 @@ class CommandComponent(commands.Component):
     #@commands.is_moderator() # set's command to moderators and streamer only
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def meow_commands(self, ctx: commands.Context) -> None:
+        await self._meow_commands(ctx)
+    async def _meow_commands(self, ctx: commands.Context) -> None:
         reply = "PUBLIC: !meows, !meow_rewards"
         if ctx.chatter.moderator or ctx.chatter.broadcaster:
             reply +=" | MOD ONLY: !add_meows, !sub_meows !set_meows, !reset_meows"
@@ -155,6 +161,8 @@ class CommandComponent(commands.Component):
     @commands.is_moderator() # set's command to moderators and streamer only
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def add_meows(self, ctx: commands.Context, *, value: int=0) -> None:
+        await self._add_meows(ctx, value)
+    async def _add_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         #mod only command that adds to the number of meows
         self.bot.counter.add(value)
         await ctx.reply(content=f"{value} Meows added, current count is {self.counter.count}")
@@ -167,6 +175,8 @@ class CommandComponent(commands.Component):
     @commands.is_moderator() # set's command to moderators and streamer only
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def sub_meows(self, ctx: commands.Context, *, value:str = '1') -> None:
+        await self._sub_meows(ctx, value)
+    async def _sub_meows(self, ctx: commands.Context, *, value:str = '1') -> None:
         command_dict = {'meow':1,'ara':10,'senpai':50,'onii':100,'nya':300, 'X3': 500}
         for key in command_dict:
             if key == value:
@@ -187,6 +197,8 @@ class CommandComponent(commands.Component):
     @commands.is_moderator() # set's command to moderators and streamer only
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def set_meows(self, ctx: commands.Context, *, value: int=0) -> None:
+        await self._set_meows(ctx, value)
+    async def _set_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         #mod only command that sets the number of meows
         self.counter.set(value)
         await ctx.reply(content=f"Meows set to {value}")
@@ -199,9 +211,36 @@ class CommandComponent(commands.Component):
     @commands.is_moderator() # set's command to moderators and streamer only
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def reset_meows(self, ctx: commands.Context) -> None:
+        await self._reset_meows(ctx)
+    async def _reset_meows(self, ctx: commands.Context) -> None:
         #mod only command that resets the number of meows
         self.counter.reset() 
         await ctx.reply(content="Meows Reset")
         LOGGER.info("user: %s - used \"!reset_meows\" to reset the meow count to %s.", ctx.chatter.display_name, self.counter.count)
 
-    
+    @commands.command()
+    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
+    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
+    #@commands.is_broadcaster() # set's command to streamer only
+    #@commands.is_moderator() # set's command to moderators and streamer only
+    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
+    async def meow(self, ctx: commands.Context, command_type: str = 'count', value: int = 0) -> None:
+        command_dict = {
+            'count': self.meows,
+            'rewards': self.meow_rewards,
+            'commands': self.meow_commands,
+            'add': self.add_meows,
+            'sub': self.sub_meows,
+            'set': self.set_meows,
+            'reset': self.reset_meows
+        }
+
+        func = command_dict.get(command_type)
+
+        if func:
+            if command_type in ['add', 'sub', 'set']:
+                await func(ctx, value)
+            else:
+                await func(ctx)
+        else:
+            await ctx.send(f"Unknown meow command type: {command_type}")
