@@ -27,6 +27,13 @@ required python version >= 3.11
 >
 >replies with the amount it recived and the new total
 
+!sub_meows *amount to subtract*
+>Mod / Channel Owner only
+>
+>replace the *amount to subtract* with the amount of meows you would like to subtract
+>
+>replies with the amount it recived and the new total
+
 !set_meows *new value*
 >Mod / Channel Owner only
 >
@@ -38,6 +45,15 @@ required python version >= 3.11
 >Mod / Channel Owner only
 >
 >resets the count of meows
+
+!meow x
+> all of the above commands have been made callable using !meow x
+> 
+> x is the key word and optinal value
+>
+> ie. to call !add_meows 10 you can now use !meow add 10
+>
+> the key words are: count (default), rewards, commands, add, sub, set, reset 
 
 ## creating a Twitch application
 1. Go to http://dev.twitch.tv/console and Create an Application
