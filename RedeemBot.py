@@ -11,7 +11,7 @@ from twitchio import eventsub
 from twitchio.ext import commands
 
 load_dotenv()
-LOGGER: logging.Logger = logging.getLogger("Bot")
+LOGGER: logging.Logger = logging.getLogger("RedeemBot")
 
 # This is where the Bot, its connections, and oauth are set up
 class RedeemBot(commands.Bot):
