@@ -35,10 +35,7 @@ class CommandBot(commands.Bot):
     async def event_ready(self):
         # When the bot is ready
         LOGGER.info("Successfully logged in as: %s", self.bot_id)
-    #    target = self.create_partialuser(user_id=self.target_id, user_login=self.target_name)
-    #    await target.send_message(sender=self.bot_id, message='Bot has landed')
 
-    #oauth token portion
     async def setup_hook(self) -> None:
         # Add our component which contains our commands...
         await self.add_component(CommandComponent(self))
@@ -115,17 +112,32 @@ class CommandComponent(commands.Component):
 
     # we use @commands.command() to initiate the setup of a command
     @commands.command()
+    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
+    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
+    #@commands.is_broadcaster() # set's command to streamer only
+    #@commands.is_moderator() # set's command to moderators and streamer only
+    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def meows(self, ctx: commands.Context) -> None:
         #mod only command that displays the number of meows 
         await ctx.reply(content=self.bot.counter.pp())
 
     @commands.command()
+    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
+    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
+    #@commands.is_broadcaster() # set's command to streamer only
+    #@commands.is_moderator() # set's command to moderators and streamer only
+    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def meow_rewards(self, ctx: commands.Context) -> None:
         #public command that explains the meow cost of diffrent rewards
         reward_costs_1 = "Meow: 1 | Ara Ara: 10 | Senpai daisuki: 50 | Onii-chan: 100 | Nya for 10 minutes: 300 | X3 nuzzles song: 500"
         await ctx.send(content=reward_costs_1)
     
     @commands.command()
+    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
+    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
+    #@commands.is_broadcaster() # set's command to streamer only
+    #@commands.is_moderator() # set's command to moderators and streamer only
+    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def meow_commands(self, ctx: commands.Context) -> None:
         reply = "PUBLIC: !meows, !meow_rewards"
         if ctx.chatter.moderator or ctx.chatter.broadcaster:
@@ -133,45 +145,33 @@ class CommandComponent(commands.Component):
         await ctx.reply(content=reply)
     
     @commands.command()
-    #To set the minimum permission/badge level to use this command remove the '#' at the begining of the line immediately following the user level desired
-    #ensure there is a '#' at the beginning of the lines immediately following the remaining levels
-    #to allow anyone to use the command place a '#' before all of the lines immediately following every level
-    #Broadcaster
-    #@commands.is_broadcaster()
-    #Moderator
-    @commands.is_moderator()
-    #VIP
-    #@commands.is_elevated()
+    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
+    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
+    #@commands.is_broadcaster() # set's command to streamer only
+    @commands.is_moderator() # set's command to moderators and streamer only
+    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def add_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         #mod only command that adds to the number of meows
         self.bot.counter.add(value)
         await ctx.reply(content=f"{value} Meows added, current count is {self.bot.counter.count}")
 
     @commands.command()
-    #To set the minimum permission/badge level to use this command remove the '#' at the begining of the line immediately following the user level desired
-    #ensure there is a '#' at the beginning of the lines immediately following the remaining levels
-    #to allow anyone to use the command place a '#' before all of the lines immediately following every level
-    #Broadcaster
-    #@commands.is_broadcaster()
-    #Moderator
-    @commands.is_moderator()
-    #VIP
-    #@commands.is_elevated()
+    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
+    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
+    #@commands.is_broadcaster() # set's command to streamer only
+    @commands.is_moderator() # set's command to moderators and streamer only
+    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def set_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         #mod only command that sets the number of meows
         self.bot.counter.set(value)
         await ctx.reply(content=f"Meows set to {value}")
 
     @commands.command()
-    #To set the minimum permission/badge level to use this command remove the '#' at the begining of the line immediately following the user level desired
-    #ensure there is a '#' at the beginning of the lines immediately following the remaining levels
-    #to allow anyone to use the command place a '#' before all of the lines immediately following every level
-    #Broadcaster
-    #@commands.is_broadcaster()
-    #Moderator
-    @commands.is_moderator()
-    #VIP
-    #@commands.is_elevated()
+    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
+    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
+    #@commands.is_broadcaster() # set's command to streamer only
+    @commands.is_moderator() # set's command to moderators and streamer only
+    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
     async def reset_meows(self, ctx: commands.Context) -> None:
         #mod only command that resets the number of meows
         self.bot.counter.reset() 
