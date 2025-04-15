@@ -6,6 +6,10 @@ class Counter:
         cls.count += count
 
     @classmethod
+    def subtract(cls, count: int):
+        cls.count -= count
+
+    @classmethod
     def set(cls, count: int):
         cls.count = count
 
