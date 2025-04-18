@@ -57,6 +57,7 @@ class RedeemBot(commands.Bot):
         else:
             # This is the first run, so skip EventSub subscription and mark it as completed
             print("First run — skipping EventSub subscription")
+            print("visit this link with both accounts to authenticate this program: http://localhost:4343/oauth?scopes=user:read:chat%20user:write:chat%20user:bot%20channel:bot%20channel:read:redemptions")
             async with self.token_database.acquire() as connection:
                 await connection.execute(
                     "INSERT OR REPLACE INTO flags (key, value) VALUES ('eventsub_initialized', 'true')"
