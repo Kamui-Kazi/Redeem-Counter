@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>enviroment variables form</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <h1>Welcome to the enviroment variable input form</h1>
+    <h2>Thank you for submiting. the following is the data we recived</h2>
+    <form>
+        <h3>Twitch app</h3>
+        <label>your twitch app's client id:</label>
+        <label type="data">{{ data_dict['client_id'] }}</label>
+        <label>your twitch app's client secret:</label>
+        <label type="data">{{ data_dict['client_secret'] }}</label>
+        <h3>Bot account</h3>
+        <label>your bot's twitch username:</label>
+        <label type="data">{{ data_dict['bot_name'] }}</label>
+        <label>your bot's twitch id number:</label>
+        <label type="data">{{ data_dict['bot_id'] }}</label>
+        <h3>Main account</h3>
+        <label>your main twitch's username:</label>
+        <label type="data">{{ data_dict['owner_name'] }}</label>
+        <label>your main twitch's id number:</label>
+        <label type="data">{{ data_dict['owner_id'] }}</label>
+        <h3>Target account</h3>
+        <label>your target's twitch username:</label>
+        <label type="data">{{ data_dict['target_name'] }}</label>
+        <label>your target's twitch id number:</label>
+        <label type="data">{{ data_dict['target_id'] }}</label>
+    </form>
+</html>

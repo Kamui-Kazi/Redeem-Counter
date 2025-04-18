@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>enviroment variables form</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <form action='/form/submited' method='post'>
+        <h1>Welcome to the enviroment variable input form</h1>
+        <h3>Twitch app</h3>
+        <label>Enter your twitch app's client id: </label>
+        <input name="client_id" type="text" required>
+        <label>Enter your twitch app's client secret: </label>
+        <input name="client_secret" type="text" required>
+        <h3>Bot account</h3>
+        <label>Enter your bot's twitch username: </label>
+        <input name="bot_name" type="text" required>
+        <label>Enter your bot's twitch id number: </label>
+        <input name="bot_id" type="text" required>
+        <h3>Main account</h3>
+        <label>Enter your main twitch's username: </label>
+        <input name="owner_name" type="text" required>
+        <label>Enter your main twitch's id number: </label>
+        <input name="owner_id" type="text" required>
+        <h3>Target account</h3>
+        <label>Enter your target's twitch username: </label>
+        <input name="target_name" type="text" />
+        <label>Enter your target's twitch id number: </label>
+        <input name="target_id" type="text" />
+        <input type="submit" value="Submit">
+    </form>
+</html>

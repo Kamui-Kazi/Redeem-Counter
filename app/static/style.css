@@ -1,0 +1,37 @@
+form {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(4, 1fr);
+}
+form > h1{
+    grid-column-start: 1;
+    grid-column-end: 5;
+    text-align: center;
+    margin-bottom: 5px;
+}
+form > h3{
+    grid-column-start: 2;
+    grid-column-end: 4;
+    text-align: center;
+    margin-bottom: 2px;
+}
+form > label {
+    grid-column: 2;
+    text-align: right;
+}
+form > label[type=data] {
+    grid-column: 3;
+    text-align: left;
+}
+form > input {
+    grid-column: 3;
+    margin-right: auto;
+    width: 75%;
+}
+form > input[type=submit] {
+    grid-column: 2;
+    margin-right: unset;
+    margin-left: auto;
+    width: 30%;
+}
+
