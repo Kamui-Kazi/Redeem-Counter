@@ -1,7 +1,8 @@
 from app import app
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 from write_file import write
-from bots import start
+from bots import run_bot_in_background
+
 
 
 @app.route('/')
@@ -10,7 +11,7 @@ def menu():
 
 @app.route('/bots', methods=['GET'])
 def run_bots():
-    start()
+    run_bot_in_background()
     return "bots are running"
 
 @app.route('/form', methods=['GET'])

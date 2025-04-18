@@ -22,7 +22,6 @@ def main() -> None:
     async def runner() -> None:
         async with asqlite.create_pool("tokens.db") as tdb, RedeemBot(token_database=tdb) as rbot, CommandBot(token_database=tdb) as cbot:
             await rbot.setup_database()
-            await cbot.setup_database()
             
             await asyncio.gather(
                 cbot.start(),
