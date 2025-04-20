@@ -1,5 +1,6 @@
 import os
 from bots import main
+from env_creation import *
 import logging
 
 LOGGER: logging.Logger = logging.getLogger("Menu")
@@ -11,13 +12,20 @@ def run_bots():
     try:
         main()
     except KeyboardInterrupt:
-        print("\n[!] Bots interrupted. Shutting down cleanly...")
+        LOGGER.warning("Bots interrupted. Shutting down cleanly...")
 
 def auth_bots():
     try:
         main(True)
     except KeyboardInterrupt:
-        print("\n[!] Authentication interrupted.")
+        LOGGER.warning("Authentication interrupted.")
+
+def write_env():
+    creator = Env_Creation()
+    try:
+        creator.create()
+    except KeyboardInterrupt:
+        LOGGER.warning(".env creation interrupted.")
 
 class Menu:
     def __init__(self):
@@ -25,7 +33,7 @@ class Menu:
             "=== Redeem Counter Bot ===",
             "1. Start the Bots",
             "2. Authenticate the Bots (needs to be run the first time)",
-            "3. Guide through creation of .env (WIP)",
+            "3. Guide through creation of .env (this will assume the streamer is the target and owner)",
             "4. Exit"
         ]
     
@@ -50,10 +58,9 @@ class Menu:
                         print("\n[!] Auth interrupted by user.")
                 case "3":
                     clear_console()
-                    print("WIP")
+                    write_env()
                 case "4":
                     clear_console()
-                    print("Goodbye!")
                     break
                 case _:
                     print("Invalid choice. Please try again.")
