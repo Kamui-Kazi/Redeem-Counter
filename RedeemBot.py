@@ -15,8 +15,9 @@ LOGGER: logging.Logger = logging.getLogger("RedeemBot")
 
 # This is where the Bot, its connections, and oauth are set up
 class RedeemBot(commands.Bot):
-    def __init__(self, *, token_database: asqlite.Pool) -> None:
+    def __init__(self, *, token_database: asqlite.Pool, auth_mode:bool = False) -> None:
         self.token_database = token_database
+        self.auth_mode:bool = auth_mode
         self.counter = Counter
         
         self.owner_name=os.environ['OWNER_NAME']
@@ -43,21 +44,15 @@ class RedeemBot(commands.Bot):
         # Add our component which contains our commands...
         await self.add_component(RedeemComponent(self))
 
-        # Check if the EventSub setup has been completed before
-        async with self.token_database.acquire() as connection:
-            row = await connection.fetchone("SELECT value FROM flags WHERE key = 'eventsub_initialized'")  # type: ignore
-
-        # If this is the second run (EventSub setup has been done before)
-        if row and row["value"] == "true":
-            
+        if not self.auth_mode:
             # Subscribe to reward redeems (event_custom_redemption_add)
             subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id, reward_id='ea01c05c-73bc-414f-bfb9-4e49ab069341')
             await self.subscribe_websocket(payload=subscription, token_for=self.target_id)
             
         else:
             # This is the first run, so skip EventSub subscription and mark it as completed
-            print("First run — skipping EventSub subscription")
-            print("visit this link with both accounts to authenticate this program: http://localhost:4343/oauth?scopes=user:read:chat%20user:write:chat%20user:bot%20channel:bot%20channel:read:redemptions")
+            LOGGER.info("First run — skipping EventSub subscription")
+            LOGGER.info("visit this link with both accounts to authenticate this program: http://localhost:4343/oauth?scopes=user:read:chat%20user:write:chat%20user:bot%20channel:bot%20channel:read:redemptions")
             async with self.token_database.acquire() as connection:
                 await connection.execute(
                     "INSERT OR REPLACE INTO flags (key, value) VALUES ('eventsub_initialized', 'true')"

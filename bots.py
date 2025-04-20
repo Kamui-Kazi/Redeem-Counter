@@ -15,12 +15,12 @@ import twitchio
 
 LOGGER: logging.Logger = logging.getLogger("Bot")
 
-def main() -> None:
+def main(auth_mode:bool = False) -> None:
     load_dotenv()
     twitchio.utils.setup_logging(level=logging.INFO)
 
     async def runner() -> None:
-        async with asqlite.create_pool("tokens.db") as tdb, RedeemBot(token_database=tdb) as rbot, CommandBot(token_database=tdb) as cbot:
+        async with asqlite.create_pool("tokens.db") as tdb, RedeemBot(auth_mode=auth_mode, token_database=tdb) as rbot, CommandBot(auth_mode=auth_mode, token_database=tdb) as cbot:
             await rbot.setup_database()
             
             await asyncio.gather(
