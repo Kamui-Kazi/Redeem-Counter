@@ -15,8 +15,9 @@ LOGGER: logging.Logger = logging.getLogger("CommandBot")
 
 # This is where the Bot, its connections, and oauth are set up
 class CommandBot(commands.Bot):
-    def __init__(self, *, token_database: asqlite.Pool) -> None:
+    def __init__(self, *, token_database: asqlite.Pool, auth_mode:bool = False) -> None:
         self.token_database = token_database
+        self.auth_mode:bool = auth_mode
         self.counter = Counter
         
         self.owner_name=os.environ['OWNER_NAME']
@@ -40,19 +41,14 @@ class CommandBot(commands.Bot):
         # Add our component which contains our commands...
         await self.add_component(CommandComponent(self))
 
-        # Check if the EventSub setup has been completed before
-        async with self.token_database.acquire() as connection:
-            row = await connection.fetchone("SELECT value FROM flags WHERE key = 'eventsub_initialized'")  # type: ignore
-
-        # If this is the second run (EventSub setup has been done before)
-        if row and row["value"] == "true":
+        if not self.auth_mode:
             # Subscribe to chat messages (EventSub)
             subscription = eventsub.ChatMessageSubscription(broadcaster_user_id=self.target_id, user_id=self.bot_id)
             await self.subscribe_websocket(payload=subscription)
             
         else:
             # This is the first run, so skip EventSub subscription and mark it as completed
-            print("First run — skipping EventSub subscription")
+            LOGGER.info("First run — skipping EventSub subscription")
             async with self.token_database.acquire() as connection:
                 await connection.execute(
                     "INSERT OR REPLACE INTO flags (key, value) VALUES ('eventsub_initialized', 'true')"
