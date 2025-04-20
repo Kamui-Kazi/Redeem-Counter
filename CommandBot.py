@@ -119,7 +119,7 @@ class CommandComponent(commands.Component):
     async def _meows(self, ctx: commands.Context) -> None:
         #mod only command that displays the number of meows 
         await ctx.reply(content=self.counter.pp())
-        LOGGER.info("user: %s - used \"!meows\"", ctx.chatter.display_name)
+        LOGGER.info("user: %s - used \"%s\"", ctx.chatter.display_name, ctx.content)
 
     @commands.command()
     # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
@@ -133,7 +133,7 @@ class CommandComponent(commands.Component):
         #public command that explains the meow cost of diffrent rewards
         reward_costs_1 = "Meow: 1 | Ara Ara: 10 | Senpai daisuki: 50 | Onii-chan: 100 | Nya for 10 minutes: 300 | X3 nuzzles song: 500"
         await ctx.send(content=reward_costs_1)
-        LOGGER.info("user: %s - used \"!meow_rewards\"", ctx.chatter.display_name)
+        LOGGER.info("user: %s - used \"%s\"", ctx.chatter.display_name, ctx.content)
     
     @commands.command()
     # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
@@ -148,7 +148,7 @@ class CommandComponent(commands.Component):
         if ctx.chatter.moderator or ctx.chatter.broadcaster:
             reply +=" | MOD ONLY: !add_meows, !sub_meows !set_meows, !reset_meows"
         await ctx.reply(content=reply)
-        LOGGER.info("user: %s - used \"!meow_commands\"", ctx.chatter.display_name)
+        LOGGER.info("user: %s - used \"%s\"", ctx.chatter.display_name, ctx.content)
     
     @commands.command()
     # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
@@ -162,7 +162,7 @@ class CommandComponent(commands.Component):
         #mod only command that adds to the number of meows
         self.bot.counter.add(value)
         await ctx.reply(content=f"{value} Meows added, current count is {self.counter.count}")
-        LOGGER.info("user: %s - used \"!add_meows\" to add %s meows, the current count is %s meows.", ctx.chatter.display_name, value, self.counter.count)
+        LOGGER.info("user: %s - used \"%s\" to add %s meows, the current count is %s meows.", ctx.chatter.display_name, ctx.content, value, self.counter.count)
 
     @commands.command()
     # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
@@ -179,12 +179,12 @@ class CommandComponent(commands.Component):
                 pair = command_dict[key]
                 self.counter.subtract(pair)
                 await ctx.reply(content=f"Removed {pair} meows. Current count is {self.counter.count} meows")
-                LOGGER.info("user: %s - used \"!sub_meows\" to remove %s meows, the current count is %s meows.", ctx.chatter.display_name, pair, self.counter.count)
+                LOGGER.info("user: %s - used \"%s\" to remove %s meows, the current count is %s meows.", ctx.chatter.display_name, ctx.content, pair, self.counter.count)
                 return
         
         self.counter.subtract(int(value))
         await ctx.reply(content=f"Removed {value} meows. Current count is {self.counter.count} meows")
-        LOGGER.info("user: %s - used \"!sub_meows\" to remove %s meows, the current count is %s meows.", ctx.chatter.display_name, value, self.counter.count)
+        LOGGER.info("user: %s - used \"%s\" to remove %s meows, the current count is %s meows.", ctx.chatter.display_name, ctx.content, value, self.counter.count)
 
     @commands.command()
     # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
@@ -198,7 +198,7 @@ class CommandComponent(commands.Component):
         #mod only command that sets the number of meows
         self.counter.set(value)
         await ctx.reply(content=f"Meows set to {value}")
-        LOGGER.info("user: %s - used \"!set_meows\" to set the meow count to %s.", ctx.chatter.display_name, self.counter.count)
+        LOGGER.info("user: %s - used \"%s\" to set the meow count to %s.", ctx.chatter.display_name, ctx.content, self.counter.count)
 
     @commands.command()
     # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
@@ -212,7 +212,7 @@ class CommandComponent(commands.Component):
         #mod only command that resets the number of meows
         self.counter.reset() 
         await ctx.reply(content="Meows Reset")
-        LOGGER.info("user: %s - used \"!reset_meows\" to reset the meow count to %s.", ctx.chatter.display_name, self.counter.count)
+        LOGGER.info("user: %s - used \"%s\" to reset the meow count to %s.", ctx.chatter.display_name, ctx.content, self.counter.count)
 
     @commands.command()
     # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
