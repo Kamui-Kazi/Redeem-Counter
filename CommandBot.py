@@ -160,7 +160,7 @@ class CommandComponent(commands.Component):
         await self._add_meows(ctx, value)
     async def _add_meows(self, ctx: commands.Context, value: int=0) -> None:
         #mod only command that adds to the number of meows
-        self.bot.counter.add(value)
+        self.bot.counter.add(int(value))
         await ctx.reply(content=f"{value} Meows added, current count is {self.counter.count}")
         LOGGER.info("user: %s - used \"%s\" to add %s meows, the current count is %s meows.", ctx.chatter.display_name, ctx.content, value, self.counter.count)
 
@@ -220,7 +220,7 @@ class CommandComponent(commands.Component):
     #@commands.is_broadcaster() # set's command to streamer only
     #@commands.is_moderator() # set's command to moderators and streamer only
     #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
-    async def meow(self, ctx: commands.Context, command_type: str = 'count', value: int = 0) -> None:
+    async def meow(self, ctx: commands.Context, command_type: str = 'count', value = 0) -> None:
         command_dict = {
             'count': self._meows,
             'rewards': self._meow_rewards,
@@ -232,8 +232,6 @@ class CommandComponent(commands.Component):
         }
 
         func = command_dict.get(command_type)
-
-        
 
         if func:
             if command_type in ['add', 'sub', 'set', 'reset']:
