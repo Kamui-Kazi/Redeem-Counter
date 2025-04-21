@@ -1,5 +1,5 @@
 import os
-from bots import main
+from bot_hub import main
 from env_creation import *
 import logging
 
@@ -32,8 +32,8 @@ class Menu:
         self.menu_lines = [
             "=== Redeem Counter Bot ===",
             "1. Start the Bots",
-            "2. Authenticate the Bots (needs to be run the first time)",
-            "3. Guide through creation of .env (this will assume the streamer is the target and owner)",
+            "2. Authenticate the Bots (Needs to be run the first time the bot's are used)",
+            "3. Guide through creation of .env (This is a required file, either use this option or make your own using the example)",
             "4. Exit"
         ]
     
