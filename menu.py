@@ -1,7 +1,6 @@
 import os
 from bots import main
 from env_creation import *
-from setup_guide import *
 import logging
 
 LOGGER: logging.Logger = logging.getLogger("Menu")
@@ -25,13 +24,6 @@ def write_env():
     creator = Env_Creation()
     try:
         creator.create()
-    except KeyboardInterrupt:
-        LOGGER.warning(".env creation interrupted.")
-
-def setup_guide():
-    guide = Setup_Guide()
-    try:
-        guide.start()
     except KeyboardInterrupt:
         LOGGER.warning(".env creation interrupted.")
 
@@ -70,7 +62,6 @@ class Menu:
                     clear_console()
                     write_env()
                 case "4":
-                    
                     pass
                 case "5":
                     clear_console()
