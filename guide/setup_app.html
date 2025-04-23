@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Redeem Counter Bot - Setup Guide</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <h1>App Creation</h1>
+        <table type="navbar">
+            <tr>
+                <td type="home"><a href="intro.html">Intro</a></td>
+                <td type="back"><a href="intro.html">back (intro)</a></td>
+                <td type="next"><a href="setup_env.html">next (setup env)</a></td>
+            </tr>
+        </table>
+        The first thing you need to do is create a twitch app.<br>
+        There are 13 steps to creating a twitch app:
+        <ol>
+            <li>As the streamer's account visit "<a href="https://dev.twitch.tv/console">https://dev.twitch.tv/console</a>"</li>
+            <li>On the left panel select <a href="https://dev.twitch.tv/console/apps">Applications</a></li>
+            <li>On the right side of the Apps page click "<a href="https://dev.twitch.tv/console/apps/create">+ Register Your Application</a>"</li>
+            <li>Enter a name for your application, doesn't matter what it is.</li>
+            <li>In the "OAuth Redirect URLs" add the url "http://localhost:4343/oauth/callback" don't press the "Add" button</li>
+            <li>For "Category" select "Chat Bot" this doesn't technicly matter but it's best to stay orginized.</li>
+            <li>For "Client Type" leave it as "Confidential"</li>
+            <li>Complete the Captcha</li>
+            <li>Hit the "Create" button</li>
+            <li>At the bottom of the page, save your Client ID, we will need this</li>
+            <li>click the "New Secret" button</li>
+            <li>click "ok" to say that yes you are sure you want to make a new secret</li>
+            <li>Save the new "Client Secret" we need this</li>
+            <li>you are now done creating the app.</li>
+        </ol>
+        The next step is to set up the enviroment variables <a href="setup_env.html">next (setup env)</a>
+    </body>
+</html> 
