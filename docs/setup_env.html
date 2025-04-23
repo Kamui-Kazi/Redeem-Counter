@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Redeem Counter Bot - Setup Guide</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <h1>Enviroment Variables</h1>
+        <table type="navbar">
+            <tr>
+                <td type="home"><a href="intro.html">Intro</a></td>
+                <td type="back"><a href="setup_app.html">back (setup app)</a></td>
+                <td type="next"><a href="setup_auth.html">next (setup auth)</a></td>
+            </tr>
+        </table>
+        The next step is to provide the program with the information it needs to run as your bot.<br>
+        We do this by using what are called "environment variables" these are stored in a file named ".env"<br>
+        To set these there are 2 main methods provided in this program,<br>
+        <ol>
+            <li> Set it up using the menu provided with the bot </li>
+            <li> Set it up using the example provided in ".env.example"</li>
+        </ol>
+        both of these methods will require some information <br>
+        <ul>
+            <li>your twitch app's client ID</li>
+            <li>your twitch app's client secret</li>
+        </ul>
+        If you don't have the information nessisary then go back to the previous page and setup a twitch app.<br>
+        If you do have that information then you can proceed.<br>
+        <h2>Getting you twitch ID numbers</h2>
+        In this section we will be getting the ID numbers for our twitch accounts,<br>
+        this is what the bot uses to connect to your accounts.<br>
+        This is nessisary no matter if you are using the menu or doing it manualy<br>
+        <ol>
+            <li>visit the site "<a href="https://www.streamweasels.com/tools/convert-twitch-username-%20to-user-id/">https://www.streamweasels.com/tools/convert-twitch-username-%20to-user-id/</a>"</li>
+            <li>in the twitch username field enter your twitch bot's username</li>
+            <li>click "Convert Twitch Username to ID"</li>
+            <li>save the number generated, this is the ID for your bot's account</li>
+            <li>in the twitch username field enter your streamer's twitch username</li>
+            <li>click "Convert Twitch Username to ID"</li>
+            <li>save the number generated, this is the ID for your streamer's account</li>
+        </ol>
+        With that done you should now have all the information to fill in the ".env"<br>
+        <h2>Menu guided setup</h2>
+        To begin I will guide you through making the ".env" using the menu in the bot<br>
+        <ol>
+            <li>Run the file called run.py this should bring up a menu screen</li>
+            <li>Select option 3 by typing 3 and pressing enter</li>
+            <li>The first thing it asks for is your client ID, paste that in and press enter</li>
+            <li>Then it will ask for your client Secret, paste that in and press enter</li>
+            <li>Then it will ask for the streamer's name, paste that in and press enter</li>
+            <li>Then it will ask for the Streamer's ID, paste that in and press enter</li>
+            <li>Then it will ask for the Bot's name, paste that in and press enter</li>
+            <li>Then it will ask for the Bot's ID, paste that in and press enter</li>
+        </ol>
+        This is all the information that the bot will need at this moment. you are now ready for the next step<br>
+        The next step is to authenticate the bots <a href="setup_auth.html">next (setup auth)</a>
+    </body>
+</html> 

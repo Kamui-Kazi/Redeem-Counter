@@ -1,0 +1,29 @@
+table {
+    border-spacing: 10px;
+    text-align: center;
+}
+table[type=navbar] {
+    width: 30%;
+}
+table[type=navbar_run] {
+    width: 20%;
+}
+table[type=navbar_usage] {
+    width: 10%;
+    
+}
+
+th, td {
+    border: 1px solid black;
+    border-radius: 2px;
+    background-color: lightgray;
+}
+td[type=home] {
+    width: 10%;
+}
+td[type=back] {
+    width: 10%;
+}
+td[type=next] {
+    width: 10%;
+}
