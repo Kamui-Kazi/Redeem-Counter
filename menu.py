@@ -1,6 +1,7 @@
 import os
 from bots import main
 from env_creation import *
+from setup_guide import *
 import logging
 
 LOGGER: logging.Logger = logging.getLogger("Menu")
@@ -27,6 +28,14 @@ def write_env():
     except KeyboardInterrupt:
         LOGGER.warning(".env creation interrupted.")
 
+def setup_guide():
+    guide = Setup_Guide()
+    try:
+        guide.start()
+    except KeyboardInterrupt:
+        LOGGER.warning(".env creation interrupted.")
+
+
 class Menu:
     def __init__(self):
         self.menu_lines = [
@@ -34,7 +43,8 @@ class Menu:
             "1. Start the Bots",
             "2. Authenticate the Bots (needs to be run the first time)",
             "3. Guide through creation of .env (this will assume the streamer is the target and owner)",
-            "4. Exit"
+            "4. Full setup guide (WIP)"
+            "5. Exit"
         ]
     
     def run(self):
@@ -60,6 +70,9 @@ class Menu:
                     clear_console()
                     write_env()
                 case "4":
+                    
+                    pass
+                case "5":
                     clear_console()
                     break
                 case _:
