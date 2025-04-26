@@ -1,97 +1,100 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Redeem Counter Bot - Usage guide</title>
+        <title>Payouts</title>
+        <link href="style.css" rel="stylesheet"/>
     </head>
-    <style>
-        table{
-            size: 100%;
-            border-collapse: collapse;
-            border: 1px solid black;
-            text-align: center;
-        }
-        tr {
-            height: 50%;
-            border-bottom: 1px solid black;
-        }
-        th, td {
-            padding: 15px;
-            background-color: lightgray;
-            border-right: 1px solid black;
-            border-left: 1px solid black;
-        }
-    </style>
+
     <body>
-        <h1>Usage guide</h1>
-        <table>
-            <tr>
-                <td><a href="intro.html">Back to Intro</a></td>
-            </tr>
-        </table>
-        <br>
-        <table>
-            <tr>
-                <th style="width: 11%;">Command</th>
-                <th style="width: 12%;">name</th>
-                <th style="width: 15%;">!meow x alias<br>(not in the version aries is using)</th>
-                <th style="width: 12%;">arguments</th>
-                <th style="width: 50%;">description</th>
-            </tr>
-            <tr>
-                <td>Count</td>
-                <td>!meows</td>
-                <td>!meow count / !meow</td>
-                <td>none</td>
-                <td>Replies to the user with the current count of meows. Is also the default for the !meow x command</td>
-            </tr>
-            <tr>
-                <td>Rewards</td>
-                <td>!meow_rewards</td>
-                <td>!meow rewards</td>
-                <td>none</td>
-                <td>Replies to the user with the cost of each payout<br>
-                    <a href="payouts.html">payouts table</a></td>
-            </tr>
-            <tr>
-                <td>Command List</td>
-                <td>!meow_commands</td>
-                <td>!meow commands</td>
-                <td>none</td>
-                <td>Replies to the user with the commands they have the permission to use</td>
-            </tr>
-            <tr>
-                <td>Add Meows</td>
-                <td>!add_meows</td>
-                <td>!meow add</td>
-                <td>integer (default 0)</td>
-                <td>Replies to the user with the new count of meows.<br>
-                    The integer can be any whole number from 0 - 9223372036854775807,<br>
-                    if no integer is provided the program defaults to 0</td>
-            </tr>
-            <tr>
-                <td>Subtract Meows<br>(not in the version aries is using)</td>
-                <td>!sub_meows</td>
-                <td>!meow sub</td>
-                <td>integer (default 0) or string (default 0)</td>
-                <td>Replies to the user with the new count of meows.<br>
-                    The integer can be any whole number from 0 - 9223372036854775807,<br>
-                    if no integer is provided the program defaults to 0.<br>
-                    a list of short hand names (aka string) can be found on the payout table <a href="payouts.html">here</a></td></td>
-            </tr>
-            <tr>
-                <td>Set Meows</td>
-                <td>!set_meows</td>
-                <td>!meow set</td>
-                <td>integer (default 0)</td>
-                <td>Replies to the user with the new count of meows.</td>
-            </tr>
-            <tr>
-                <td>Reset Meows</td>
-                <td>!reset_meows</td>
-                <td>!meow reset</td>
-                <td>none</td>
-                <td>Resets the meow count to 0</td>
-            </tr>
-        </table>
+        <main>
+            <div id="content">
+                <section>
+                    <table>
+                        <tr>
+                            <th style="width: 11%;">Command</th>
+                            <th style="width: 12%;">name</th>
+                            <th style="width: 15%;">!meow x alias<br>(not in the version aries is using)</th>
+                            <th style="width: 12%;">arguments (default)</th>
+                            <th style="width: 50%;">description</th>
+                        </tr>
+                        <tr>
+                            <td>Count</td>
+                            <td>!meows</td>
+                            <td>!meow count / !meow</td>
+                            <td>none</td>
+                            <td>Replies to the user with the current count of meows. Is also the default for the !meow x command</td>
+                        </tr>
+                        <tr>
+                            <td>Rewards</td>
+                            <td>!meow_rewards</td>
+                            <td>!meow rewards</td>
+                            <td>none</td>
+                            <td>Replies to the user with the cost of each payout<br>
+                                <a href="payouts.html">payouts</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Command List</td>
+                            <td>!meow_commands</td>
+                            <td>!meow commands</td>
+                            <td>none</td>
+                            <td>Replies to the user with the commands they have the permission to use</td>
+                        </tr>
+                        <tr>
+                            <td>Add Meows</td>
+                            <td>!add_meows</td>
+                            <td>!meow add</td>
+                            <td>number (0)</td>
+                            <td>Replies to the user with the new count of meows.<br>
+                                you can provide a positive whole number
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Subtract Meows<br>(not in the version aries is using)</td>
+                            <td>!sub_meows</td>
+                            <td>!meow sub</td>
+                            <td>number or name (0)</td>
+                            <td>Replies to the user with the new count of meows.<br>
+                                you can provide a positive whole number, <br>
+                                or you can provide a name that corosponds to a payout,<br>
+                                ie. "!meow sub nya" is the same as "!meow sub 300"<br> 
+                                a list of these names can be found on the <a href="payouts.html">payouts table</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Set Meows</td>
+                            <td>!set_meows</td>
+                            <td>!meow set</td>
+                            <td>number (0)</td>
+                            <td>Replies to the user with the new count of meows.</td>
+                        </tr>
+                        <tr>
+                            <td>Reset Meows</td>
+                            <td>!reset_meows</td>
+                            <td>!meow reset</td>
+                            <td>none</td>
+                            <td>Resets the meow count to 0</td>
+                        </tr>
+                    </table>
+                </section>
+        
+                <aside>
+                    <h2>Pages</h2>
+                    <ul class="NavList">
+                        <li><a href="setup_app.html">Twitch App</a></li>
+                        <li><a href="setup_env.html">Enviroment</a></li>
+                        <li><a href="setup_auth.html">Authenticate</a></li>
+                        <li><a href="setup_run.html">Run</a></li>
+                        <li><a href="usage.html">Usage</a></li>
+                        <li><a href="payouts.html">Payouts</a></li>
+                    </ul>
+                </aside>
+            </div>
+            
+            <nav>
+                <label><a href="index.html">Home</a></label>
+                <label class="start"><a href="https://kamui-kazi.github.io/">Project Emporium</a></label>
+            </nav>
+        </main>
     </body>
-</html> 
+</html>
