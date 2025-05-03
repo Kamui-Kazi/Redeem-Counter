@@ -107,13 +107,44 @@ class CommandComponent(commands.Component):
         self.bot = bot
         self.counter = bot.counter
 
+    def QuickGuard(level:int = 0):
+        # Guard that checks if the user has a sufficient role based on the given level.
+        # Levels:
+        #     0 - Anyone
+        #     1 - Streamer only
+        #     2 - Mod or higher
+        #     3 - VIP or higher
+        #     4 - Sub or higher
+
+        def predicate(ctx: commands.Context) -> bool:
+            chatter = ctx.chatter
+            match level:
+                case 1: # Level 1: streamer only
+                    return chatter.broadcaster
+                
+                case 2: # Level 2: Mod or higher
+                    return chatter.broadcaster or chatter.moderator
+                
+                case 3: # Level 3: VIP or higher
+                    return chatter.broadcaster or chatter.moderator or chatter.vip
+
+                case 4: # Level 4: Sub or higher
+                    return chatter.broadcaster or chatter.moderator or chatter.vip or chatter.subscriber
+
+                case _: # Level 0: everyone 
+                    return True
+            
+        return commands.guard(predicate)
+
     # we use @commands.command() to initiate the setup of a command
     @commands.command()
-    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
-    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
-    #@commands.is_broadcaster() # set's command to streamer only
-    #@commands.is_moderator() # set's command to moderators and streamer only
-    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
+    # To set the minimum permission/badge level to use this command set the value of the "QuickGuard" acordingly:    # 0 = anyone
+    # 0 = anyone
+    # 1 = Streamer only
+    # 2 = Mod or higher
+    # 3 = Vip or higher
+    # 4 = Sub or higher
+    @QuickGuard(0)
     async def meows(self, ctx: commands.Context) -> None:
         await self._meows(ctx)
     async def _meows(self, ctx: commands.Context) -> None:
@@ -122,40 +153,46 @@ class CommandComponent(commands.Component):
         LOGGER.info("user: %s - used \"%s\"", ctx.chatter.display_name, ctx.content)
 
     @commands.command()
-    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
-    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
-    #@commands.is_broadcaster() # set's command to streamer only
-    #@commands.is_moderator() # set's command to moderators and streamer only
-    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
+    # To set the minimum permission/badge level to use this command set the value of the "QuickGuard" acordingly:    # 0 = anyone
+    # 0 = anyone
+    # 1 = Streamer only
+    # 2 = Mod or higher
+    # 3 = Vip or higher
+    # 4 = Sub or higher
+    @QuickGuard(0)
     async def meow_rewards(self, ctx: commands.Context) -> None:
         await self._meow_rewards(ctx)
     async def _meow_rewards(self, ctx: commands.Context) -> None:
         #public command that explains the meow cost of diffrent rewards
-        reward_costs_1 = "Meow: 1 | Ara Ara: 10 | Senpai daisuki: 50 | Onii-chan: 100 | Nya for 10 minutes: 300 | X3 nuzzles song: 500"
+        reward_costs_1 = "Meow: 1 | Ara Ara: 10 | Snarl: 30 | Senpai daisuki: 50 | Onii-chan: 100 | Nya for 10 minutes: 300 | X3 nuzzles song: 500"
         await ctx.send(content=reward_costs_1)
         LOGGER.info("user: %s - used \"%s\"", ctx.chatter.display_name, ctx.content)
     
     @commands.command()
-    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
-    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
-    #@commands.is_broadcaster() # set's command to streamer only
-    #@commands.is_moderator() # set's command to moderators and streamer only
-    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
+    # To set the minimum permission/badge level to use this command set the value of the "QuickGuard" acordingly:    # 0 = anyone
+    # 0 = anyone
+    # 1 = Streamer only
+    # 2 = Mod or higher
+    # 3 = Vip or higher
+    # 4 = Sub or higher
+    @QuickGuard(0)
     async def meow_commands(self, ctx: commands.Context) -> None:
         await self._meow_commands(ctx)
     async def _meow_commands(self, ctx: commands.Context) -> None:
-        reply = "PUBLIC: !meows, !meow_rewards"
+        reply = "PUBLIC: !meows, !meow rewards"
         if ctx.chatter.moderator or ctx.chatter.broadcaster:
-            reply +=" | MOD ONLY: !add_meows, !sub_meows !set_meows, !reset_meows"
+            reply +=" | MOD ONLY: !meow add [int], !meow sub [int/name], !meow set [int], !meow reset"
         await ctx.reply(content=reply)
         LOGGER.info("user: %s - used \"%s\"", ctx.chatter.display_name, ctx.content)
     
     @commands.command()
-    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
-    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
-    #@commands.is_broadcaster() # set's command to streamer only
-    @commands.is_moderator() # set's command to moderators and streamer only
-    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
+    # To set the minimum permission/badge level to use this command set the value of the "QuickGuard" acordingly:    # 0 = anyone
+    # 0 = anyone
+    # 1 = Streamer only
+    # 2 = Mod or higher
+    # 3 = Vip or higher
+    # 4 = Sub or higher
+    @QuickGuard(2)
     async def add_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         await self._add_meows(ctx, value)
     async def _add_meows(self, ctx: commands.Context, value: int=0) -> None:
@@ -165,15 +202,17 @@ class CommandComponent(commands.Component):
         LOGGER.info("user: %s - used \"%s\" to add %s meows, the current count is %s meows.", ctx.chatter.display_name, ctx.content, value, self.counter.count)
 
     @commands.command()
-    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
-    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
-    #@commands.is_broadcaster() # set's command to streamer only
-    @commands.is_moderator() # set's command to moderators and streamer only
-    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
+    # To set the minimum permission/badge level to use this command set the value of the "QuickGuard" acordingly:    # 0 = anyone
+    # 0 = anyone
+    # 1 = Streamer only
+    # 2 = Mod or higher
+    # 3 = Vip or higher
+    # 4 = Sub or higher
+    @QuickGuard(2)
     async def sub_meows(self, ctx: commands.Context, *, value:str = '1') -> None:
         await self._sub_meows(ctx, value)
     async def _sub_meows(self, ctx: commands.Context, value:str = '1') -> None:
-        command_dict = {'meow':1,'ara':10,'senpai':50,'onii':100,'nya':300, 'X3': 500}
+        command_dict = {'meow':1,'ara':10,'snarl':30,'senpai':50,'onii':100,'nya':300, 'X3': 500}
         for key in command_dict:
             if key == value:
                 pair = command_dict[key]
@@ -187,11 +226,13 @@ class CommandComponent(commands.Component):
         LOGGER.info("user: %s - used \"%s\" to remove %s meows, the current count is %s meows.", ctx.chatter.display_name, ctx.content, value, self.counter.count)
 
     @commands.command()
-    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
-    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
-    #@commands.is_broadcaster() # set's command to streamer only
-    @commands.is_moderator() # set's command to moderators and streamer only
-    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
+    # To set the minimum permission/badge level to use this command set the value of the "QuickGuard" acordingly:    # 0 = anyone
+    # 0 = anyone
+    # 1 = Streamer only
+    # 2 = Mod or higher
+    # 3 = Vip or higher
+    # 4 = Sub or higher
+    @QuickGuard(2)
     async def set_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         await self._set_meows(ctx, value)
     async def _set_meows(self, ctx: commands.Context, value: int=0) -> None:
@@ -201,11 +242,12 @@ class CommandComponent(commands.Component):
         LOGGER.info("user: %s - used \"%s\" to set the meow count to %s.", ctx.chatter.display_name, ctx.content, self.counter.count)
 
     @commands.command()
-    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
-    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
-    #@commands.is_broadcaster() # set's command to streamer only
-    @commands.is_moderator() # set's command to moderators and streamer only
-    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
+    # To set the minimum permission/badge level to use this command set the value of the "QuickGuard" acordingly:    # 0 = anyone
+    # 1 = Streamer only
+    # 2 = Mod or higher
+    # 3 = Vip or higher
+    # 4 = Sub or higher
+    @QuickGuard(2)
     async def reset_meows(self, ctx: commands.Context) -> None:
         await self._reset_meows(ctx)
     async def _reset_meows(self, ctx: commands.Context) -> None:
@@ -215,11 +257,13 @@ class CommandComponent(commands.Component):
         LOGGER.info("user: %s - used \"%s\" to reset the meow count to %s.", ctx.chatter.display_name, ctx.content, self.counter.count)
 
     @commands.command()
-    # To set the minimum permission/badge level to use this command remove the '#' at the begining of the line corosponding to the user level desired
-    # To allow anyone to use the command place a '#' before all of the lines immediately following every level
-    #@commands.is_broadcaster() # set's command to streamer only
-    #@commands.is_moderator() # set's command to moderators and streamer only
-    #@commands.is_elevated() # set's command to VIPs, moderators, and the streamer only
+    # To set the minimum permission/badge level to use this command set the value of the "QuickGuard" acordingly:
+    # 0 = anyone
+    # 1 = Streamer only
+    # 2 = Mod or higher
+    # 3 = Vip or higher
+    # 4 = Sub or higher
+    @QuickGuard(0)
     async def meow(self, ctx: commands.Context, command_type: str = 'count', value = 0) -> None:
         command_dict = {
             'count': self._meows,
@@ -230,19 +274,43 @@ class CommandComponent(commands.Component):
             'set': self._set_meows,
             'reset': self._reset_meows
         }
+        # Guard levels for each subcommand
+        guard_levels = {
+            'count': 0,  # Anyone
+            'rewards': 0,
+            'commands': 0,
+            'add': 2,    # Mod or higher
+            'sub': 2,
+            'set': 2,
+            'reset': 2,
+        }
+
 
         func = command_dict.get(command_type)
 
-        if func:
-            if command_type in ['add', 'sub', 'set', 'reset']:
-                if (ctx.chatter.moderator or ctx.chatter.broadcaster):
-                    if command_type in ['add', 'sub', 'set']:
-                        await func(ctx, value)
-                    else:
-                        await func(ctx)
-                else:
-                    await ctx.reply("You don't have the perms for this silly.")
-            else:
-                await func(ctx)
-        else:
+        if not func:
             await ctx.send(f"Unknown meow command type: {command_type}")
+            return
+
+        # If this command type has a guard, run it
+        if command_type in guard_levels:
+            level = guard_levels[command_type]
+            guard = self.QuickGuard(level)
+            allowed = guard(ctx)
+
+            if callable(allowed):
+                allowed = await allowed 
+
+            if not allowed:
+                await ctx.reply("You don't have the perms for this silly.")
+                return
+
+        # Call the actual subcommand
+        if command_type in ['add', 'sub', 'set']:
+            await func(ctx, value)
+        else:
+            await func(ctx)
+
+                
+
+        
