@@ -102,11 +102,13 @@ label[class="start"] {
   padding: auto;
 }
 
-ul {
+ul[class="sidebar"] {
   margin: 1%;
   padding: 0%;
 
-  font-size: large;
-
   list-style: none;
+}
+
+ul[class="sidebar"] {
+  font-size: large;
 }
