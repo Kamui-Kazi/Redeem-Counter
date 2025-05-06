@@ -107,7 +107,7 @@ class CommandComponent(commands.Component):
         self.bot = bot
         self.counter = bot.counter
 
-    def QuickGuard(level:int = 0):
+    def QuickGuard(self, level:int = 0):
         # Guard that checks if the user has a sufficient role based on the given level.
         # Levels:
         #     0 - Anyone
@@ -133,7 +133,7 @@ class CommandComponent(commands.Component):
 
                 case _: # Level 0: everyone 
                     return True
-            
+                
         return commands.guard(predicate)
 
     # we use @commands.command() to initiate the setup of a command
@@ -285,7 +285,6 @@ class CommandComponent(commands.Component):
             'reset': 2,
         }
 
-
         func = command_dict.get(command_type)
 
         if not func:
@@ -293,23 +292,21 @@ class CommandComponent(commands.Component):
             return
 
         # If this command type has a guard, run it
+        
+
         if command_type in guard_levels:
             level = guard_levels[command_type]
-            guard = self.QuickGuard(level)
-            allowed = guard(ctx)
+            allowed = self.QuickGuard(level)
 
-            if callable(allowed):
-                allowed = await allowed 
+            if allowed:
+                if command_type in ['add', 'sub', 'set']:
+                    await func(ctx, value)
+                else:
+                    await func(ctx)
 
             if not allowed:
                 await ctx.reply("You don't have the perms for this silly.")
-                return
-
-        # Call the actual subcommand
-        if command_type in ['add', 'sub', 'set']:
-            await func(ctx, value)
-        else:
-            await func(ctx)
+        
 
                 
 
