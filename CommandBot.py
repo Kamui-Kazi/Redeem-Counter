@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import logging
 import asyncio
 import asqlite
+import typing
 
 from counter import Counter
 
@@ -112,6 +113,14 @@ class CommandComponent(commands.Component):
         self.bot = bot
         self.counter = bot.counter
 
+    def bypass_cool(ctx: commands.Context) -> typing.Hashable | None:
+        # Returning None will bypass the cooldown
+        if ctx.chatter.moderator:
+            return None
+
+        # For everyone else, return and call the default chatter strategy
+        return commands.BucketType.channel
+    
     def QuickGuard(self, level:int = 0):
         # Guard that checks if the user has a sufficient role based on the given level.
         # Levels:
@@ -150,6 +159,7 @@ class CommandComponent(commands.Component):
     # 3 = Vip or higher
     # 4 = Sub or higher
     @QuickGuard(0)
+    @commands.cooldown(rate=1, per=15, key=bypass_cool)
     async def meows(self, ctx: commands.Context) -> None:
         await self._meows(ctx)
     async def _meows(self, ctx: commands.Context) -> None:
@@ -165,6 +175,7 @@ class CommandComponent(commands.Component):
     # 3 = Vip or higher
     # 4 = Sub or higher
     @QuickGuard(0)
+    @commands.cooldown(rate=1, per=15, key=bypass_cool)
     async def meow_rewards(self, ctx: commands.Context) -> None:
         await self._meow_rewards(ctx)
     async def _meow_rewards(self, ctx: commands.Context) -> None:
@@ -181,6 +192,7 @@ class CommandComponent(commands.Component):
     # 3 = Vip or higher
     # 4 = Sub or higher
     @QuickGuard(0)
+    @commands.cooldown(rate=1, per=15, key=bypass_cool)
     async def meow_commands(self, ctx: commands.Context) -> None:
         await self._meow_commands(ctx)
     async def _meow_commands(self, ctx: commands.Context) -> None:
@@ -198,6 +210,7 @@ class CommandComponent(commands.Component):
     # 3 = Vip or higher
     # 4 = Sub or higher
     @QuickGuard(2)
+    @commands.cooldown(rate=1, per=15, key=bypass_cool)
     async def add_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         await self._add_meows(ctx, value)
     async def _add_meows(self, ctx: commands.Context, value: int=0) -> None:
@@ -214,6 +227,7 @@ class CommandComponent(commands.Component):
     # 3 = Vip or higher
     # 4 = Sub or higher
     @QuickGuard(2)
+    @commands.cooldown(rate=1, per=15, key=bypass_cool)
     async def sub_meows(self, ctx: commands.Context, *, value:str = '1') -> None:
         await self._sub_meows(ctx, value)
     async def _sub_meows(self, ctx: commands.Context, value:str = '1') -> None:
@@ -238,6 +252,7 @@ class CommandComponent(commands.Component):
     # 3 = Vip or higher
     # 4 = Sub or higher
     @QuickGuard(2)
+    @commands.cooldown(rate=1, per=15, key=bypass_cool)
     async def set_meows(self, ctx: commands.Context, *, value: int=0) -> None:
         await self._set_meows(ctx, value)
     async def _set_meows(self, ctx: commands.Context, value: int=0) -> None:
@@ -253,6 +268,7 @@ class CommandComponent(commands.Component):
     # 3 = Vip or higher
     # 4 = Sub or higher
     @QuickGuard(2)
+    @commands.cooldown(rate=1, per=15, key=bypass_cool)
     async def reset_meows(self, ctx: commands.Context) -> None:
         await self._reset_meows(ctx)
     async def _reset_meows(self, ctx: commands.Context) -> None:
@@ -269,6 +285,7 @@ class CommandComponent(commands.Component):
     # 3 = Vip or higher
     # 4 = Sub or higher
     @QuickGuard(0)
+    @commands.cooldown(rate=1, per=15, key=bypass_cool)
     async def meow(self, ctx: commands.Context, command_type: str = 'count', value = 0) -> None:
         command_dict = {
             'count': self._meows,
