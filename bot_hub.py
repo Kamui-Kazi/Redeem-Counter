@@ -14,8 +14,11 @@ from CommandBot import CommandBot
 import twitchio
 
 LOGGER: logging.Logger = logging.getLogger("Bot")
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def main(auth_mode:bool = False) -> None:
+    clear_console()
     load_dotenv()
     twitchio.utils.setup_logging(level=logging.INFO)
 
@@ -25,7 +28,7 @@ def main(auth_mode:bool = False) -> None:
             
             await asyncio.gather(
                 cbot.start(),
-                rbot.start()
+                #rbot.start()
             )
 
     try:
