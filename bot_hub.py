@@ -28,7 +28,7 @@ def main(auth_mode:bool = False) -> None:
             
             await asyncio.gather(
                 cbot.start(),
-                #rbot.start()
+                rbot.start()
             )
 
     try:
