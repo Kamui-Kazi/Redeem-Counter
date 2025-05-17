@@ -92,14 +92,19 @@ class CommandBot(commands.Bot):
             await connection.execute(query)         # tokens table
             await connection.execute(query_flags)   # flags table
     
-    async def invoke(self, ctx: commands.Context):
-        try:
-            await ctx.invoke()
-        except commands.CommandNotFound:
-            LOGGER.warning("Unknown command: %s", ctx.message.text)
-        except commands.GuardFailure:
-            await ctx.reply("You don't have permission to use this command.")
-            LOGGER.warning("Command called without perms: %s", ctx.message.text)
+    async def event_command_error(self, payload: commands.CommandErrorPayload):
+        ctx = payload.context
+        error = payload.exception
+        match error.__class__:
+            case commands.CommandNotFound:
+                LOGGER.warning("Unknown command: %s", ctx.message.text)
+            case commands.GuardFailure:
+                await ctx.reply("You don't have permission to use this command.")
+                LOGGER.warning("Command called without perms: %s", ctx.message.text)
+            case commands.CommandOnCooldown:
+                LOGGER.warning("Command called on cooldown: %s", ctx.message.text)
+            case _:
+                LOGGER.warning("Unknown exeption raised by: %s", ctx.message.text)
 
 
 class CommandComponent(commands.Component):
