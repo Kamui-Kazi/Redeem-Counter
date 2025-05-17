@@ -18,19 +18,22 @@ class RedeemBot(commands.Bot):
     def __init__(self, *, token_database: asqlite.Pool, auth_mode:bool = False) -> None:
         self.token_database = token_database
         self.auth_mode:bool = auth_mode
+        self.redeem_id = os.environ['REDEEM_TARGET']
         self.counter = Counter
         
-        self.owner_name=os.environ['OWNER_NAME']
-        self.bot_name=os.environ['BOT_NAME_1']
-        self.target_id=os.environ['TARGET_ID']
-        self.target_name=os.environ['TARGET_NAME']
+        self.bot_name    = os.environ['BOT_NAME_1']
+        
+        self.owner_name  = os.environ['OWNER_NAME']
+        
+        self.target_name = os.environ['TARGET_NAME']
+        self.target_id   = os.environ['TARGET_ID']
         
         super().__init__(
-            client_id=os.environ['CLIENT_ID'],
-            client_secret=os.environ['CLIENT_SECRET'],
-            bot_id=os.environ['BOT_ID_1'],
-            owner_id=os.environ['OWNER_ID'],
-            prefix=os.environ['BOT_PREFIX'],
+            client_id     =os.environ['CLIENT_ID'],
+            client_secret =os.environ['CLIENT_SECRET'],
+            bot_id        =os.environ['BOT_ID_1'],
+            owner_id      =os.environ['OWNER_ID'],
+            prefix        =os.environ['BOT_PREFIX'],
         )
     
     async def event_ready(self):
@@ -46,7 +49,10 @@ class RedeemBot(commands.Bot):
 
         if not self.auth_mode:
             # Subscribe to reward redeems (event_custom_redemption_add)
-            subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id, reward_id='ea01c05c-73bc-414f-bfb9-4e49ab069341')
+            if not self.redeem_id == 'none': # if a reward ID is specified
+                subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id, reward_id=self.redeem_id)
+            else: # if a reward ID is not specified
+                subscription = eventsub.ChannelPointsRedeemAddSubscription(broadcaster_user_id=self.target_id)
             await self.subscribe_websocket(payload=subscription, token_for=self.target_id)
             
         else:
