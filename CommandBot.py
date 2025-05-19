@@ -180,7 +180,7 @@ class CommandComponent(commands.Component):
         await self._meow_rewards(ctx)
     async def _meow_rewards(self, ctx: commands.Context) -> None:
         #public command that explains the meow cost of diffrent rewards
-        reward_costs_1 = "Meow: 1 | Ara Ara: 10 | Snarl: 30 | Senpai daisuki: 50 | Onii-chan: 100 | Nya for 10 minutes: 300 | X3 nuzzles song: 500"
+        reward_costs_1 = "Meow: 1 | Ara Ara: 10 | Snarl: 30 | Onii-chan: 50 | Senpai daisuki: 100 | Nya for 10 minutes: 300 | X3 nuzzles song: 500"
         await ctx.send(content=reward_costs_1)
         LOGGER.info("user: %s - used \"%s\"", ctx.chatter.display_name, ctx.content)
     
@@ -231,7 +231,7 @@ class CommandComponent(commands.Component):
     async def sub_meows(self, ctx: commands.Context, *, value:str = '1') -> None:
         await self._sub_meows(ctx, value)
     async def _sub_meows(self, ctx: commands.Context, value:str = '1') -> None:
-        command_dict = {'meow':1,'ara':10,'snarl':30,'senpai':50,'onii':100,'nya':300, 'X3': 500}
+        command_dict = {'meow':1,'ara':10,'snarl':30,'onii':50,'senpai':100,'nya':300, 'nuzzle': 500}
         for key in command_dict:
             if key == value:
                 pair = command_dict[key]
