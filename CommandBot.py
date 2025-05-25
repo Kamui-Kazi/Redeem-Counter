@@ -313,22 +313,21 @@ class CommandComponent(commands.Component):
             await ctx.send(f"Unknown meow command type: {command_type}")
             return
 
-        # If this command type has a guard, run it
+        
         
 
-        if command_type in guard_levels:
-            level = guard_levels[command_type]
-            allowed = self.QuickGuard(level)
-
-            if allowed:
+        if command_type in {'add', 'sub','set','reset'}:
+            if ctx.chatter.moderator:
                 if command_type in ['add', 'sub', 'set']:
                     await func(ctx, value)
                 else:
                     await func(ctx)
 
-            if not allowed:
+            else:
                 await ctx.reply("You don't have the perms for this silly.")
         
+        else:
+            await func(ctx)
 
                 
 
