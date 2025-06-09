@@ -4,6 +4,7 @@ import logging
 import asyncio
 import asqlite
 import typing
+import random
 
 from counter import Counter
 
@@ -330,5 +331,20 @@ class CommandComponent(commands.Component):
             await func(ctx)
 
                 
-
+    @commands.command()
+    async def pp(self, ctx: commands.Context, user: str = 'none') -> None:
+        if user == 'none':
+            user = ctx.chatter.name
+        
+        unique = {
+            'morphosius' : 20,
+            'ariesakana' : 1,
+            'kamui_kazi' : 20,
+        }
+        
+        if user.lower() in unique:
+            await ctx.reply(f"@streamelements lies! {user}'s pp is {unique[user.lower()]} inches! streamelements' pp is 0 inches.")
+            return
+        
+        await ctx.reply(f"@streamelements lies! {user}'s pp is {random.randint(0, 15)} inches! streamelements' pp is 0 inches.")
         
