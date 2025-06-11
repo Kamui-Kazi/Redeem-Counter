@@ -335,16 +335,19 @@ class CommandComponent(commands.Component):
     async def pp(self, ctx: commands.Context, user: str = 'none') -> None:
         if user == 'none':
             user = ctx.chatter.name
+            
+        user.removeprefix('@')
+            
         
         unique = {
             'morphosius' : 20,
-            'ariesakana' : 1,
             'kamui_kazi' : 20,
+            'ariesakana' : 1,
         }
         
         if user.lower() in unique:
-            await ctx.reply(f"@streamelements lies! {user}'s pp is {unique[user.lower()]} inches! streamelements' pp is 0 inches.")
+            await ctx.reply(f"@streamelements lies! @{user}'s pp is {unique[user.lower()]} inches! streamelements' pp is 0 inches.")
             return
         
-        await ctx.reply(f"@streamelements lies! {user}'s pp is {random.randint(0, 15)} inches! streamelements' pp is 0 inches.")
+        await ctx.reply(f"@streamelements lies! @{user}'s pp is {random.randint(0, 15)} inches! streamelements' pp is 0 inches.")
         
