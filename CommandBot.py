@@ -336,13 +336,13 @@ class CommandComponent(commands.Component):
         if user == 'none':
             user = ctx.chatter.name
             
-        user.removeprefix('@')
+        user = user.removeprefix('@')
             
         
         unique = {
             'morphosius' : 20,
             'kamui_kazi' : 20,
-            'ariesakana' : 1,
+            'ariesakana' : 4,
         }
         
         if user.lower() in unique:
